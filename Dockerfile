@@ -1,0 +1,27 @@
+FROM nvidia/cuda:11.4.2-runtime-ubuntu20.04
+
+MAINTAINER yanorei32
+EXPOSE 8080
+WORKDIR /work
+COPY requirements.txt /work
+
+RUN set ex; \
+	apt-get update; \
+	apt-get install -y --no-install-recommends \
+		python3 python3-pip zlib1g libjpeg-turbo8; \
+	savedAptMark="$(apt-mark showmanual)"; \
+	apt-get install -y --no-install-recommends \
+		python3-dev zlib1g-dev libjpeg-dev gcc; \
+	CC="gcc -O3 -march=native" pip install -r requirements.txt; \
+	apt-mark auto '.*' > /dev/null; \
+	[ -z "$savedAptMark" ] || apt-mark manual $savedAptMark; \
+	apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
+	rm -rf /var/lib/apt/lists/*;
+
+CMD [ \
+    "jupyter", \
+    "notebook", \
+    "--port", "8080", \
+    "--allow-root", \
+    "--ip=0.0.0.0", \
+    "--NotebookApp.token=password" ]

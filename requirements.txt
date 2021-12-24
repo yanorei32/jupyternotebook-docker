@@ -1,0 +1,9 @@
+jupyter
+matplotlib
+mlxtend
+numpy
+pandas
+pillow-simd
+scikit-learn
+sentencepiece
+torch
