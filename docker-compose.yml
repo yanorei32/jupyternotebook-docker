@@ -86,6 +86,7 @@ services:
     image: jupyternotebook
     container_name: jupyternotebook__jupyternotebook
     hostname: jupyternotebook
+    init: true
 
     restart: always
 
