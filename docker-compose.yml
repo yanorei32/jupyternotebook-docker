@@ -31,6 +31,17 @@ services:
     command:
       tunnel --hostname ${DOMAIN_NAME} --url http://nginx:80
 
+    deploy:
+      resources:
+        limits:
+          memory: 128m
+
+    logging:
+      driver: json-file
+      options:
+        max-file: '1'
+        max-size: 1m
+
   nginx:
     image: nginx:1.21.4
     hostname: nginx
@@ -59,6 +70,17 @@ services:
     expose:
       - 80
 
+    deploy:
+      resources:
+        limits:
+          memory: 256m
+
+    logging:
+      driver: json-file
+      options:
+        max-file: '1'
+        max-size: 1m
+
   jupyternotebook:
     build: .
     image: jupyternotebook
@@ -81,10 +103,18 @@ services:
 
     deploy:
       resources:
+        limits:
+          memory: 16g
         reservations:
           devices:
             - driver: nvidia
               capabilities: [gpu]
+
+    logging:
+      driver: json-file
+      options:
+        max-file: '1'
+        max-size: 1m
 
 volumes:
   workdir:
