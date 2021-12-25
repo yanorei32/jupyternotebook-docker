@@ -4,6 +4,7 @@ jupyternotebook environment for machine learning with GPU/SIMD.
 
 ## pre-installed packages
 
+* cupy
 * jupyter
 * matplotlib
 * mlxtend
