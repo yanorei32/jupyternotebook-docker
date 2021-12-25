@@ -9,7 +9,7 @@ ENV LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH
 RUN set ex; \
 	apt-get update; \
 	apt-get install -y --no-install-recommends \
-		python3 python3-pip zlib1g libjpeg-turbo8 libgomp1 git unzip; \
+		python3 python3-pip zlib1g libjpeg-turbo8 libgomp1 git unzip wget curl; \
 	savedAptMark="$(apt-mark showmanual)"; \
 	apt-get install -y --no-install-recommends \
 		python3-dev zlib1g-dev libjpeg-dev gcc; \
