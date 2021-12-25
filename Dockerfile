@@ -24,4 +24,5 @@ CMD [ \
     "--port", "8080", \
     "--allow-root", \
     "--ip=0.0.0.0", \
-    "--NotebookApp.token=password" ]
+    "--NotebookApp.token=password", \
+	"--NotebookApp.allow_origin=*" ]

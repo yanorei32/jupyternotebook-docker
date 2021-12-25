@@ -1,0 +1,106 @@
+version: '3.9'
+services:
+  cloudflared:
+    image: cloudflare/cloudflared:2021.12.3
+    hostname: cloudflared
+    container_name: jupyternotebook__cloudflared
+
+    # for 600 cert.pem
+    user: root
+
+    depends_on:
+      - nginx
+
+    restart: always
+
+    volumes:
+      - type: bind
+        source: ./cert.pem
+        target: /etc/cloudflared/cert.pem
+        read_only: true
+
+      - type: bind
+        source: ./config.yml
+        target: /etc/cloudflared/config.yml
+        read_only: true
+
+    networks:
+      - nginx_cloudflared
+      - cloudflared_internet
+
+    command:
+      tunnel --hostname ${DOMAIN_NAME} --url http://nginx:80
+
+  nginx:
+    image: nginx:1.21.4
+    hostname: nginx
+    container_name: jupyternotebook__nginx
+
+    restart: always
+
+    depends_on:
+      - jupyternotebook
+
+    volumes:
+      - type: bind
+        source: ./nginx.conf
+        target: /etc/nginx/nginx.conf
+        read_only: true
+
+      - type: bind
+        source: ./.htpasswd
+        target: /etc/nginx/.htpasswd
+        read_only: true
+
+    networks:
+      - nginx_cloudflared
+      - jupyternotebook_nginx
+
+    expose:
+      - 80
+
+  jupyternotebook:
+    build: .
+    image: jupyternotebook
+    container_name: jupyternotebook__jupyternotebook
+    hostname: jupyternotebook
+
+    restart: always
+
+    volumes:
+      - type: volume
+        source: workdir
+        target: /work
+
+    networks:
+      - jupyternotebook_nginx
+      - jupyternotebook_internet
+
+    expose:
+      - 8080
+
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              capabilities: [gpu]
+
+volumes:
+  workdir:
+    name: jupyternotebook__workdir
+
+networks:
+  jupyternotebook_nginx:
+    name: jupyternotebook__jupyternotebook_nginx
+    internal: true
+
+  nginx_cloudflared:
+    name: jupyternotebook__nginx_cloudflared
+    internal: true
+
+  jupyternotebook_internet:
+    name: jupyternotebook__jupyternotebook_internet
+
+  cloudflared_internet:
+    name: jupyternotebook__cloudflared_internet
