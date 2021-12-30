@@ -3,7 +3,8 @@ FROM nvidia/cuda:11.4.2-runtime-ubuntu20.04
 MAINTAINER yanorei32
 EXPOSE 8080
 WORKDIR /work
-COPY requirements.txt /work
+COPY Pipfile /work
+COPY Pipfile.lock /work
 ENV LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH
 
 RUN set ex; \
@@ -13,7 +14,7 @@ RUN set ex; \
 	savedAptMark="$(apt-mark showmanual)"; \
 	apt-get install -y --no-install-recommends \
 		python3-dev zlib1g-dev libjpeg-dev gcc; \
-	CC="gcc -O3 -march=native" pip install -r requirements.txt; \
+	CC="gcc -O3 -march=native" pipenv install; \
 	apt-mark auto '.*' > /dev/null; \
 	[ -z "$savedAptMark" ] || apt-mark manual $savedAptMark; \
 	apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
