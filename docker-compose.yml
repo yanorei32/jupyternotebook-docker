@@ -43,7 +43,7 @@ services:
         max-size: 1m
 
   nginx:
-    image: nginx:1.21.4
+    image: nginx:1.23.0
     hostname: nginx
     container_name: jupyternotebook__nginx
 
