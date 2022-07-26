@@ -1,3 +1,7 @@
+# !IMPORTANT! This project has moved to here!
+* https://github.com/yanorei32/uthree-ml-image/
+* https://github.com/yr32infra/uthree-ml-deploy/
+
 # jupyternotebook docker
 
 jupyternotebook environment for machine learning with GPU/SIMD.
